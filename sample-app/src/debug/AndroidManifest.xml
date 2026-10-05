@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <permission android:name="dev.droidprobe.sample.permission.PROBE" android:protectionLevel="signature" />
+    <uses-permission android:name="dev.droidprobe.sample.permission.PROBE" />
+    <application>
+        <provider android:name=".SampleProbeProvider" android:authorities="dev.droidprobe.sample.probe"
+            android:exported="true" android:permission="dev.droidprobe.sample.permission.PROBE" android:grantUriPermissions="false" />
+    </application>
+</manifest>
