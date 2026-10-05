@@ -98,7 +98,8 @@ object Oracles {
         UNIQUE_ORDER -> {
             val id = spec.operationId ?: state.operationId
             val count = state.orderCount(id)
-            InvariantResult(UNIQUE_ORDER, count <= 1, id != null, "orderCount <= 1", "orderCount = $count", id)
+            val applicable = id != null && state.events.any { it.type == "requestAccepted" && it.operationId == id }
+            InvariantResult(UNIQUE_ORDER, count <= 1, applicable, "orderCount <= 1", "orderCount = $count", id)
         }
         DRAFT -> {
             val applicable = state.acknowledgedDraft != null && state.events.any { it.type == "draftRestored" }

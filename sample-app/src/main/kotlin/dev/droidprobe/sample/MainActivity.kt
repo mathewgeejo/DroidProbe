@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() { super.onResume(); store.change { foreground(true) } }
     override fun onPause() { store.change { foreground(false) }; super.onPause() }
 }
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable private fun StoreUi(store: SampleStore) {
     val s = store.observed.value
     MaterialTheme(colorScheme = darkColorScheme(primary = Color(0xFF7DE2C6), background = Color(0xFF10171F), surface = Color(0xFF18232F))) {

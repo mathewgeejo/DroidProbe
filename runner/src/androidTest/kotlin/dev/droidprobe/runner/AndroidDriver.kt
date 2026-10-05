@@ -27,7 +27,8 @@ class AndroidDriver(private val evidenceDir: File) : Driver {
         require(runId.matches(Regex("[A-Za-z0-9_-]{1,100}")))
         // Force-stop is reset plumbing, not a simulated OS process-death test.
         device.executeShellCommand("am force-stop dev.droidprobe.sample")
-        this.runId = runId; sequence = 0; lastScreen = null; lastGeneration = 0; dirtyUi = true
+        if (this.runId != runId) sequence = 0
+        this.runId = runId; lastScreen = null; lastGeneration = 0; dirtyUi = true
         if (orientation == Orientation.PORTRAIT) device.setOrientationNatural() else device.setOrientationLeft()
         client.exchange(BridgeRequest(BridgeCommand.RESET, runId, mode, fixtures, faults))
     }

@@ -33,6 +33,7 @@ class SampleEngine(initial: AppState = AppState(), private val clock: () -> Long
         state = state.copy(phase = "ackPending")
         if (!state.faults.holdAcknowledgement) release()
     }
+    fun retryPending() { require(state.phase == "ackPending"); persistRequest() }
     fun release() {
         state = state.copy(faults = state.faults.copy(holdAcknowledgement = false))
         event("acknowledgementReleased")
