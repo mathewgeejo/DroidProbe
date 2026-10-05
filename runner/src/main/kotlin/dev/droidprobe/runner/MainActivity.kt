@@ -1,10 +1,12 @@
 package dev.droidprobe.runner
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import dev.droidprobe.core.*
@@ -61,6 +64,7 @@ class MainActivity : ComponentActivity() {
                                     Text("Graph of observed behavior", style = MaterialTheme.typography.titleLarge)
                                     if (report == null) Text("No observations stored.") else {
                                         Text("${report.graph.nodes.size} states · ${report.graph.transitions.size} transitions")
+                                        ObservedGraph(report.graph)
                                         report.graph.nodes.values.forEach { n -> InfoCard("${n.screen} / ${n.phase}", "${n.signature.take(10)} · ${n.visits} visits\n${n.availableActions.size} available actions\n${n.failures.size} failure associations") }
                                         report.graph.transitions.forEach { t -> Text("${t.from.take(6)} → ${t.to.take(6)}\n${t.actionKey}", style = MaterialTheme.typography.bodySmall) }
                                     }
@@ -70,6 +74,10 @@ class MainActivity : ComponentActivity() {
                                     if (report == null) Text("No evidence stored.") else {
                                         Text(report.runId); Text(report.status); Text("Planner: ${report.plannerIdentity}\n${report.modelStatus}")
                                         report.findings.forEach { f -> InfoCard(f.assertion.id, "${f.classification}\nExpected: ${f.assertion.expected}\nObserved: ${f.assertion.observed}\nFingerprint: ${f.fingerprint}\nScreenshot: ${f.screenshot ?: "unavailable"}") }
+                                        val bitmap = remember(report.runId) { report.findings.firstOrNull()?.screenshot?.let { name ->
+                                            BitmapFactory.decodeFile(File(store.directory(report.runId), "screenshots/$name").absolutePath)?.asImageBitmap()
+                                        } }
+                                        if (bitmap != null) Image(bitmap, "Captured failure screen", Modifier.fillMaxWidth().height(240.dp))
                                         if (report.findings.isEmpty()) Text("No confirmed business invariant violations in this run.")
                                         report.replays.forEach { r -> InfoCard("Replay ${r.mode}: ${r.status}", "${r.records.size} actions · ${r.elapsedMs}ms\n${r.detail ?: r.assertion?.observed ?: ""}") }
                                         Text("Executed sequence", style = MaterialTheme.typography.titleMedium)

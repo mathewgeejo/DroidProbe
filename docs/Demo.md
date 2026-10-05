@@ -1,0 +1,11 @@
+# Demonstration
+
+Use the commands in README to build/install once. Keep the controller in the background during exploration.
+
+1. Run `WorkflowTest` for the first vertical slice. It resets the sample, opens checkout, waits for a persisted order, rotates while acknowledgement is held, releases it and checks order multiplicity. It repeats from clean fixtures and runs the same scenario in corrected mode. This is explicitly a development reproduction fixture.
+2. Run `DemoTest`. The graph planner receives UI/SDK state and the general developer goal, not the fixture sequence. It autonomously explores valid actions until an approved invariant fails. The test then replays that saved discovery. Separately, it minimizes an intentionally longer checkout reproduction fixture and verifies faulty/corrected results. The UI and exported metadata distinguish these sources.
+3. Open the controller with `adb shell am start -n dev.droidprobe.runner/.MainActivity`. Review the real run record, planner identity, observed graph, assertion evidence and replay outcomes. Minimization shows the actual original/current lengths, attempts and successes. No statistics appear until stored runs exist.
+4. Pull the latest regression bundle with `scripts/device.py`, import its Kotlin test and asset, compile the test APK and execute it in corrected and faulty modes. The corrected assertion must pass; the faulty invocation must produce an assertion failure. Infrastructure errors or timeouts are not evidence of either result.
+5. Demonstrate local AI only after following physical-device model setup and observing accepted model proposals. An absent model run is explicitly a baseline.
+
+The flagship expected evidence is two persisted order records sharing `checkout-1`, an `orderPersisted` event preceding `activityRecreated` and `lifecycleResubmission`, and an unchanged at-most-one-order assertion passing with one record in corrected mode. These are expected conditions; consult the checked-in validation record for what was actually exercised.
