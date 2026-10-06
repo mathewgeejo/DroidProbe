@@ -36,7 +36,7 @@ adb shell am instrument -w -e class dev.droidprobe.runner.ExplorationTest -e pla
 adb shell am start -n dev.droidprobe.runner/.MainActivity
 ```
 
-JUnit's `OK (...)`/failure output is authoritative; ADB can exit zero even when a test fails. Watch progress with `adb logcat -s DroidProbe:I`. Screenshots and atomic JSON reports are stored under runner `files/runs/<runId>`. Open the controller after instrumentation finishes to avoid interrupting the target. Its tabs cover configuration, run history, observed states/transitions, assertions/evidence, minimization and export sharing.
+JUnit's `OK (...)`/failure output is authoritative; ADB can exit zero even when a test fails. Watch progress with `adb logcat -s DroidProbe:I`. Screenshots and atomic JSON reports are stored under runner `files/runs/<runId>`. Open the controller after instrumentation finishes to avoid interrupting the target. Overview summarizes results, Runs provides search and filters, and Setup configures the next run. Each run opens Evidence, Graph, Reduce and Export views. See the [controller UI and screenshots](docs/UI.md).
 
 ## Export and regression
 

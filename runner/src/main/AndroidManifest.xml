@@ -4,7 +4,7 @@
         <package android:name="dev.droidprobe.sample" />
         <provider android:authorities="dev.droidprobe.sample.probe" />
     </queries>
-    <application android:label="DroidProbe" android:theme="@android:style/Theme.Material.NoActionBar" android:allowBackup="false">
+    <application android:label="DroidProbe" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:theme="@android:style/Theme.Material.NoActionBar" android:allowBackup="false">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity>

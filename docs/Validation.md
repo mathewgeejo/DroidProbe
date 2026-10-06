@@ -2,6 +2,8 @@
 
 Validation date: 2026-10-06. The Android baseline workflow is exercised end to end. Physical-device local-model inference remains blocked; no AI performance comparison is claimed. [Raw evidence](evidence/README.md) accompanies these results.
 
+The subsequent [controller UI refresh](UI.md) has separate build and visual-review evidence. The workflow results and APK hashes below describe the original captured baseline execution.
+
 | Requirement | Implementation and exercised result |
 |---|---|
 | Pure Kotlin protocol, observations, normalization and validator | 20 JVM tests passed, zero failures/errors/skips |
