@@ -29,7 +29,7 @@ class WorkflowTest {
             assertTrue(fixed.assertion!!.passed)
             val config = RunConfig()
             store.save(RunReport("vertical-slice", config, "scripted reproduction fixture", "validated checkout replay", faulty.records, faulty.observations,
-                StateGraph(), listOf(Finding(fingerprint = faulty.assertion!!.fingerprint(), assertion = faulty.assertion!!, actionIndex = 7, screenshot = faulty.observations.last().screenshot)),
+                StateGraph(), listOf(Finding(fingerprint = faulty.assertion!!.fingerprint(), assertion = faulty.assertion!!, actionIndex = faulty.records.lastIndex, screenshot = faulty.observations.last().screenshot)),
                 emptyList(), faulty.elapsedMs, replays = listOf(faulty, repeat, fixed), device = deviceMetadata()))
         } finally { driver.cleanup() }
     }

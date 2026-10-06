@@ -78,10 +78,12 @@ class DemoTest {
             val discovery = Scenario(name = "Autonomously observed checkout", faults = config.faults, actions = report.records.map { it.action },
                 assertion = AssertionSpec(report.findings.first().assertion.id, report.findings.first().assertion.operationId), source = "autonomous graph baseline")
             val reproduced = engine.replay(discovery, "${id}-discovery-replay")
+            report = report.copy(replays = listOf(reproduced)); store.save(report)
             assertEquals(reproduced.detail, ReplayStatus.REPRODUCED, reproduced.status)
             // Intentionally longer development reproduction, distinguished from autonomous discovery.
             val longer = FixtureScenarios.checkout(longer = true)
             val original = engine.replay(longer, "${id}-long")
+            report = report.copy(replays = report.replays + original); store.save(report)
             assertEquals(original.detail, ReplayStatus.REPRODUCED, original.status)
             var attempt = 0
             val minimized = Minimizer().minimize(longer, original.assertion!!.fingerprint(), maxReplays = 24, wallClockMs = 300_000) {
@@ -89,7 +91,9 @@ class DemoTest {
             }
             assertTrue("No valid reduction found", minimized.scenario.actions.size < longer.actions.size)
             val faulty = engine.replay(minimized.scenario, "${id}-faulty")
+            report = report.copy(minimization = minimized, replays = report.replays + faulty); store.save(report)
             val fixed = engine.replay(minimized.scenario, "${id}-fixed", AppMode.CORRECTED)
+            report = report.copy(replays = report.replays + fixed); store.save(report)
             assertEquals(faulty.detail, ReplayStatus.REPRODUCED, faulty.status)
             assertEquals(fixed.detail, ReplayStatus.FAILURE_NOT_OBSERVED, fixed.status)
             report = report.copy(minimization = minimized, replays = listOf(reproduced, original, faulty, fixed)); store.save(report)

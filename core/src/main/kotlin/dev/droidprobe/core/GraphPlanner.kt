@@ -47,7 +47,7 @@ object AvailableActions {
             if (e.editable) add(ActionIR("proposal", ActionType.ENTER_TEXT, selector = Selector(e.key), text = "Probe draft ${o.sdk?.operationCounter ?: 0}"))
             else add(ActionIR("proposal", ActionType.TAP, selector = Selector(e.key)))
         }
-        add(ActionIR("proposal", ActionType.ROTATE, orientation = if (o.orientation == Orientation.PORTRAIT) Orientation.LANDSCAPE else Orientation.PORTRAIT,
+        add(ActionIR("proposal", ActionType.ROTATE, timeoutMs = 15_000, orientation = if (o.orientation == Orientation.PORTRAIT) Orientation.LANDSCAPE else Orientation.PORTRAIT,
             preconditions = if (o.sdk?.phase == "ackPending") listOf(Condition(ConditionType.ORDER_PERSISTED, operationId = o.sdk.operationId)) else emptyList()))
         add(ActionIR("proposal", ActionType.BACKGROUND))
         if (o.screen != "Home") add(ActionIR("proposal", ActionType.BACK))

@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             Column(Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }.statusBarsPadding().navigationBarsPadding()
                 .verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text("PROBE STORE", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
-                Text(s.screen, style = MaterialTheme.typography.headlineLarge)
+                Text(s.screen, modifier = Modifier.testTag("screen_${s.screen.lowercase()}"), style = MaterialTheme.typography.headlineLarge)
                 Text("${s.mode} · resettable developer fixture", style = MaterialTheme.typography.bodySmall)
                 HorizontalDivider()
                 when (s.screen) {

@@ -13,7 +13,7 @@ object FixtureScenarios {
             ActionIR("checkout", ActionType.TAP, selector = Selector("cart_checkout")),
             ActionIR("submit", ActionType.TAP, selector = Selector("checkout_submit")),
             ActionIR("persisted", ActionType.WAIT, condition = Condition(ConditionType.ORDER_PERSISTED, operationId = "checkout-1"), dependsOn = listOf("submit")),
-            ActionIR("rotate", ActionType.ROTATE, orientation = Orientation.LANDSCAPE, preconditions = listOf(Condition(ConditionType.ORDER_PERSISTED, operationId = "checkout-1")), dependsOn = listOf("persisted")),
+            ActionIR("rotate", ActionType.ROTATE, timeoutMs = 15_000, orientation = Orientation.LANDSCAPE, preconditions = listOf(Condition(ConditionType.ORDER_PERSISTED, operationId = "checkout-1")), dependsOn = listOf("persisted")),
             ActionIR("release", ActionType.RELEASE_FAULT, dependsOn = listOf("rotate")),
             ActionIR("ack", ActionType.WAIT, condition = Condition(ConditionType.ACKNOWLEDGED), dependsOn = listOf("release")))
         return Scenario(name = "Checkout lifecycle fixture", faults = FaultConfig(holdAcknowledgement = true), actions = actions,
@@ -24,5 +24,5 @@ object FixtureScenarios {
         ActionIR("edit", ActionType.ENTER_TEXT, selector = Selector("draft_content"), text = "Acknowledged field notes"),
         ActionIR("save", ActionType.TAP, selector = Selector("draft_save")),
         ActionIR("saved", ActionType.WAIT, condition = Condition(ConditionType.DRAFT_ACKNOWLEDGED), dependsOn = listOf("save")),
-        ActionIR("rotate", ActionType.ROTATE, orientation = Orientation.LANDSCAPE, dependsOn = listOf("saved"))), assertion = AssertionSpec(Oracles.DRAFT))
+        ActionIR("rotate", ActionType.ROTATE, timeoutMs = 15_000, orientation = Orientation.LANDSCAPE, dependsOn = listOf("saved"))), assertion = AssertionSpec(Oracles.DRAFT))
 }

@@ -5,6 +5,7 @@ import android.os.SystemClock
 import android.os.Build
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Configurator
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import dev.droidprobe.core.*
@@ -24,6 +25,11 @@ class AndroidDriver(private val evidenceDir: File) : Driver {
     private var lastGeneration = 0
     private var dirtyUi = true
     private var startOrientation: Orientation? = null
+    private fun refreshAccessibility() {
+        if (Build.VERSION.SDK_INT >= 34) {
+            instrumentation.getUiAutomation(Configurator.getInstance().uiAutomationFlags).clearCache()
+        }
+    }
     private fun setOrientation(orientation: Orientation) {
         // Android 11+ supports explicit display rotation through UI Automator's
         // window-manager API. Older devices use the UiAutomation default display.
@@ -41,7 +47,10 @@ class AndroidDriver(private val evidenceDir: File) : Driver {
         if (this.runId != runId) sequence = 0
         this.runId = runId; lastScreen = null; lastGeneration = 0; dirtyUi = true
         startOrientation = orientation
+        device.wakeUp()
         device.pressHome()
+        refreshAccessibility()
+        if (!device.wait(Until.gone(By.pkg(SAMPLE_PACKAGE)), 15_000)) throw WorkflowTimeout("Previous target window did not close during reset")
         setOrientation(orientation)
         client.exchange(BridgeRequest(BridgeCommand.RESET, runId, mode, fixtures, faults))
     }
@@ -99,6 +108,15 @@ class AndroidDriver(private val evidenceDir: File) : Driver {
     override suspend fun observe(history: List<String>): Observation {
         if (dirtyUi) { device.waitForIdle(3_000); dirtyUi = false }
         var s = state()
+        if (s.foreground) {
+            // A resumed Activity and an idle event stream do not guarantee that the
+            // new Compose semantics tree is available. Pair the UI marker with SDK state.
+            refreshAccessibility()
+            if (!device.wait(Until.hasObject(By.res("screen_${s.screen.lowercase()}").pkg(SAMPLE_PACKAGE)), 15_000)) {
+                throw WorkflowTimeout("UI did not become ready for SDK screen ${s.screen}")
+            }
+            s = state()
+        }
         var foreground = device.currentPackageName == SAMPLE_PACKAGE && s.foreground
         if (foreground && (dirtyUi || s.screen != lastScreen || s.generation != lastGeneration)) {
             // UI synchronization, distinct from a business event wait.

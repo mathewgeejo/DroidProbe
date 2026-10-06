@@ -57,10 +57,12 @@ else:
         minimization = report.get('minimization')
         row = {
             'runId': report['runId'], 'requestedPlanner': report['config']['planner'], 'actualPlanner': report['plannerIdentity'],
+            'status': report['status'], 'explorationRun': not report['plannerIdentity'].startswith('scripted'),
             'seed': report['config']['seed'], 'budget': report['config']['actionBudget'], 'mode': report['config']['mode'],
             'confirmedUniqueBugs': len({f['fingerprint'] for f in findings}),
             'actionsUntilFirstBug': sum(len(episode) for episode in report.get('previousEpisodes', [])) + findings[0]['actionIndex'] + 1 if findings else None,
             'actions': report.get('totalExecutedActions', len(report['records'])),
+            'recordedSequenceLength': len(report['records']), 'episodes': len(report.get('previousEpisodes', [])) + 1,
             'observedStates': len(report['graph']['nodes']), 'transitions': len(report['graph']['transitions']),
             'reproductionSuccesses': sum(r['status'] == 'REPRODUCED' for r in replays if r['mode'] == 'FAULTY'),
             'reproductionAttempts': sum(r['mode'] == 'FAULTY' for r in replays),
