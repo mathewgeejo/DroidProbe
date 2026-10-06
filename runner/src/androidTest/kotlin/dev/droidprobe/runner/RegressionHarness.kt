@@ -18,7 +18,8 @@ object RegressionHarness {
         try {
             val result = ReplayEngine(driver).replay(scenario, "exported-${System.currentTimeMillis()}", mode)
             assertEquals("${result.detail ?: ""} ${result.assertion}", ReplayStatus.FAILURE_NOT_OBSERVED, result.status)
-            check(result.assertion?.applicable == true && result.assertion.passed) { "Business assertion did not execute" }
+            val assertion = result.assertion
+            check(assertion?.applicable == true && assertion.passed) { "Business assertion did not execute" }
         } finally { driver.cleanup() }
     }
 }

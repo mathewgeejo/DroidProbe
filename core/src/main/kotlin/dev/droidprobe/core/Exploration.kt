@@ -21,7 +21,7 @@ class Explorer(private val driver: Driver, private val clock: () -> Long = { Sys
         try {
             driver.reset(runId, config.mode, Fixtures(), config.faults, Orientation.PORTRAIT)
             // Launch is itself replayable and never chosen by an LLM during reset.
-            val launch = ActionIR("a0", ActionType.LAUNCH)
+            val launch = ActionIR("a0", ActionType.LAUNCH, timeoutMs = 30_000)
             val initial = driver.observe(); driver.execute(launch)
             var o = driver.observe(listOf(launch.key()))
             records += ActionRecord(launch, initial.sequence, o.sequence, clock() - start, o.sdk?.events ?: emptyList())

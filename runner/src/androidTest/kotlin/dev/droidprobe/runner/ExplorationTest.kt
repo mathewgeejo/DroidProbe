@@ -53,7 +53,11 @@ class ExplorationTest {
                 val faulty = replay.replay(scenario, "${runId}-replay", config.mode)
                 val fixed = replay.replay(scenario, "${runId}-fixed", AppMode.CORRECTED)
                 report = report.copy(replays = listOf(faulty, fixed)); store.save(report)
-                val bundle = store.export(report, scenario); store.save(report.copy(exportedBundle = bundle.name))
+                var minimizationAttempt = 0
+                val minimized = if (faulty.status == ReplayStatus.REPRODUCED) Minimizer().minimize(scenario, finding.fingerprint,
+                    maxReplays = 12, wallClockMs = 120_000) { replay.replay(it, "${runId}-min-${++minimizationAttempt}", config.mode) } else null
+                report = report.copy(minimization = minimized); store.save(report)
+                val bundle = store.export(report, minimized?.scenario ?: scenario); store.save(report.copy(exportedBundle = bundle.name))
             }
             assertFalse(report.status, report.status.startsWith("infrastructure failure"))
         } finally { model?.close(); driver.cleanup() }
@@ -91,6 +95,7 @@ class DemoTest {
             report = report.copy(minimization = minimized, replays = listOf(reproduced, original, faulty, fixed)); store.save(report)
             val zip = store.export(report, minimized.scenario); store.save(report.copy(exportedBundle = zip.name))
             Log.i("DroidProbe", "{\"export\":\"${zip.absolutePath}\",\"original\":${longer.actions.size},\"minimized\":${minimized.scenario.actions.size}}")
+            Unit
         } finally { driver.cleanup() }
     }
 }

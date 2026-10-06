@@ -1,6 +1,7 @@
 package dev.droidprobe.core
 
 import kotlinx.serialization.Serializable
+import kotlinx.coroutines.CancellationException
 
 @Serializable enum class ReplayStatus { REPRODUCED, FAILURE_NOT_OBSERVED, INVALID_PRECONDITION, INFRASTRUCTURE_FAILURE, TIMEOUT }
 @Serializable data class ActionRecord(val action: ActionIR, val beforeSequence: Long, val afterSequence: Long, val elapsedMs: Long, val events: List<AppEvent>)
@@ -18,11 +19,13 @@ class ReplayEngine(private val driver: Driver, private val clock: () -> Long = {
         val start = clock()
         val records = mutableListOf<ActionRecord>()
         val observations = mutableListOf<Observation>()
+        var stage = "fixture reset"
         fun result(status: ReplayStatus, detail: String? = null, assertion: InvariantResult? = null) = ReplayResult(runId, mode, status, assertion, records.toList(), observations.toList(), detail, clock() - start)
         val schema = ActionValidator.scenario(scenario)
         if (!schema.valid) return result(ReplayStatus.INVALID_PRECONDITION, schema.reason)
         try {
             driver.reset(runId, mode, scenario.fixtures, scenario.faults, scenario.initialOrientation)
+            stage = "initial observation"
             var o = driver.observe()
             observations += o
             val executed = mutableSetOf<String>()
@@ -31,20 +34,24 @@ class ReplayEngine(private val driver: Driver, private val clock: () -> Long = {
                 val v = ActionValidator.validate(a, ValidationContext(o, scenario.actions.size - records.size, executed, maxRepetitions = Int.MAX_VALUE))
                 if (!v.valid) return result(ReplayStatus.INVALID_PRECONDITION, "${a.id}: ${v.reason}")
                 val actionStart = clock()
+                stage = "action ${a.id} (${a.type})"
                 driver.execute(a)
+                stage = "observation after ${a.id}"
                 val next = driver.observe((records.map { it.action.key() } + a.key()).takeLast(4))
                 records += ActionRecord(a, o.sequence, next.sequence, clock() - actionStart, next.sdk?.events?.filter { it.sequence > o.synchronizedThroughEvent } ?: emptyList())
                 observations += next
                 executed += a.id
                 o = next
             }
+            if (clock() - start > wallClockMs) return result(ReplayStatus.TIMEOUT, "Replay wall-clock budget exhausted after action completion")
             val sdk = o.sdk ?: return result(ReplayStatus.INFRASTRUCTURE_FAILURE, "Missing SDK business assertion signals")
             val invariant = Oracles.evaluate(scenario.assertion, sdk)
             if (!invariant.applicable) return result(ReplayStatus.INVALID_PRECONDITION, "Assertion has no applicable logical operation/acknowledged data", invariant)
             return result(if (invariant.passed) ReplayStatus.FAILURE_NOT_OBSERVED else ReplayStatus.REPRODUCED, assertion = invariant)
         } catch (e: PreconditionFailure) { return result(ReplayStatus.INVALID_PRECONDITION, e.message) }
         catch (e: WorkflowTimeout) { return result(ReplayStatus.TIMEOUT, e.message) }
-        catch (e: Exception) { return result(ReplayStatus.INFRASTRUCTURE_FAILURE, "${e.javaClass.simpleName}: ${e.message}") }
+        catch (e: CancellationException) { throw e }
+        catch (e: Exception) { return result(ReplayStatus.INFRASTRUCTURE_FAILURE, "$stage: ${e.stackTraceToString()}") }
     }
 }
 @Serializable data class MinimizeAttempt(val length: Int, val successes: Int, val attempts: Int, val statuses: List<ReplayStatus>, val kept: Boolean)

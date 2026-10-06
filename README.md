@@ -59,7 +59,7 @@ The exported Kotlin depends on **DroidProbe replay harness 0.1.0**. The correcte
 python scripts/device.py pull-runs
 ```
 
-Compare only matching build, fixtures, budgets, faults and invariants. Raw `evaluation.json` includes requested/actual planner, unique invariant fingerprints, actions to first bug, observed graph size, reproduction counts/ratios, original/minimized lengths, model timings/parse failures/fallbacks and memory/thermal snapshots. Fallback runs are baselines. No coverage completeness or AI speedup is claimed.
+Compare only matching build, fixtures, budgets, faults and invariants. Raw `evaluation.json` includes requested/actual planner, unique invariant fingerprints, actions to first bug, observed graph size, reproduction counts/ratios, original/minimized lengths, model timings/parse failures/fallbacks and memory/thermal snapshots. False-positive adjudication remains explicitly unmeasured; a failed replay is recorded separately. Fallback runs are baselines. No coverage completeness or AI speedup is claimed.
 
 - [Architecture and Mermaid diagrams](Architecture.md)
 - [Debug SDK integration](docs/SDK-integration.md)

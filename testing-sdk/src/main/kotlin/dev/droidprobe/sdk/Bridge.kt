@@ -8,6 +8,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
 import android.os.Bundle
+import android.os.DeadObjectException
 import dev.droidprobe.core.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -42,7 +43,24 @@ abstract class DebugProbeProvider : ContentProvider() {
 class ProbeClient(private val resolver: ContentResolver) {
     fun exchange(request: BridgeRequest): AppState {
         val bundle = Bundle().apply { putString("json", ProbeJson.encodeToString(request)) }
-        val result = resolver.call(PROBE_URI, "exchange", null, bundle) ?: error("Debug SDK bridge unavailable")
-        return ProbeJson.decodeFromString(requireNotNull(result.getString("json")))
+        // Never keep a provider handle across target force-stop/restart. An unstable client
+        // also prevents target death from taking the instrumentation process with it.
+        repeat(2) { attempt ->
+            try {
+                val provider = resolver.acquireUnstableContentProviderClient(PROBE_URI)
+                    ?: error("Debug SDK provider unavailable for ${request.command}")
+                provider.use {
+                    val result = it.call("exchange", null, bundle)
+                        ?: error("Debug SDK returned no response for ${request.command}")
+                    val json = result.getString("json")
+                        ?: error("Debug SDK response missing json for ${request.command}")
+                    return ProbeJson.decodeFromString(json)
+                }
+            } catch (e: DeadObjectException) {
+                // Reads and fixture reset are idempotent. Do not retry other mutations.
+                if (attempt > 0 || request.command !in setOf(BridgeCommand.READ, BridgeCommand.RESET)) throw e
+            }
+        }
+        error("Debug SDK provider restart failed")
     }
 }

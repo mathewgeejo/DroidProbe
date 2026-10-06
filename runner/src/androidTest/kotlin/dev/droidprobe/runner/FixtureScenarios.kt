@@ -5,7 +5,7 @@ import dev.droidprobe.core.*
 /** Development fixtures only. Never passed to exploration planners. */
 object FixtureScenarios {
     fun checkout(longer: Boolean = false): Scenario {
-        val actions = mutableListOf(ActionIR("launch", ActionType.LAUNCH))
+        val actions = mutableListOf(ActionIR("launch", ActionType.LAUNCH, timeoutMs = 30_000))
         if (longer) actions += listOf(ActionIR("extra-orders", ActionType.TAP, selector = Selector("home_orders")), ActionIR("extra-home", ActionType.TAP, selector = Selector("navigate_home")))
         actions += listOf(
             ActionIR("product", ActionType.TAP, selector = Selector("home_product")),
@@ -20,7 +20,7 @@ object FixtureScenarios {
             assertion = AssertionSpec(Oracles.UNIQUE_ORDER, "checkout-1"), source = "scripted reproduction fixture")
     }
     fun draft() = Scenario(name = "Draft recreation fixture", source = "scripted reproduction fixture", actions = listOf(
-        ActionIR("launch", ActionType.LAUNCH), ActionIR("draft", ActionType.TAP, selector = Selector("home_draft")),
+        ActionIR("launch", ActionType.LAUNCH, timeoutMs = 30_000), ActionIR("draft", ActionType.TAP, selector = Selector("home_draft")),
         ActionIR("edit", ActionType.ENTER_TEXT, selector = Selector("draft_content"), text = "Acknowledged field notes"),
         ActionIR("save", ActionType.TAP, selector = Selector("draft_save")),
         ActionIR("saved", ActionType.WAIT, condition = Condition(ConditionType.DRAFT_ACKNOWLEDGED), dependsOn = listOf("save")),
