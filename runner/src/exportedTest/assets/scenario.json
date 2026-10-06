@@ -1,0 +1,202 @@
+{
+    "schemaVersion": 1,
+    "harnessVersion": "0.1.0",
+    "name": "Checkout lifecycle fixture",
+    "targetPackage": "dev.droidprobe.sample",
+    "mode": "FAULTY",
+    "fixtures": {
+        "name": "clean-store-v1",
+        "initialDraft": "",
+        "initialCartItems": 0
+    },
+    "initialOrientation": "PORTRAIT",
+    "faults": {
+        "holdAcknowledgement": true,
+        "requestError": false
+    },
+    "actions": [
+        {
+            "id": "launch",
+            "type": "LAUNCH",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": null,
+            "text": null,
+            "orientation": null,
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [],
+            "timeoutMs": 30000,
+            "rationale": null
+        },
+        {
+            "id": "extra-orders",
+            "type": "TAP",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": {
+                "key": "home_orders",
+                "packageName": "dev.droidprobe.sample"
+            },
+            "text": null,
+            "orientation": null,
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [],
+            "timeoutMs": 5000,
+            "rationale": null
+        },
+        {
+            "id": "extra-home",
+            "type": "TAP",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": {
+                "key": "navigate_home",
+                "packageName": "dev.droidprobe.sample"
+            },
+            "text": null,
+            "orientation": null,
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [],
+            "timeoutMs": 5000,
+            "rationale": null
+        },
+        {
+            "id": "product",
+            "type": "TAP",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": {
+                "key": "home_product",
+                "packageName": "dev.droidprobe.sample"
+            },
+            "text": null,
+            "orientation": null,
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [],
+            "timeoutMs": 5000,
+            "rationale": null
+        },
+        {
+            "id": "add",
+            "type": "TAP",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": {
+                "key": "product_add",
+                "packageName": "dev.droidprobe.sample"
+            },
+            "text": null,
+            "orientation": null,
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [],
+            "timeoutMs": 5000,
+            "rationale": null
+        },
+        {
+            "id": "checkout",
+            "type": "TAP",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": {
+                "key": "cart_checkout",
+                "packageName": "dev.droidprobe.sample"
+            },
+            "text": null,
+            "orientation": null,
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [],
+            "timeoutMs": 5000,
+            "rationale": null
+        },
+        {
+            "id": "submit",
+            "type": "TAP",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": {
+                "key": "checkout_submit",
+                "packageName": "dev.droidprobe.sample"
+            },
+            "text": null,
+            "orientation": null,
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [],
+            "timeoutMs": 5000,
+            "rationale": null
+        },
+        {
+            "id": "persisted",
+            "type": "WAIT",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": null,
+            "text": null,
+            "orientation": null,
+            "condition": {
+                "type": "ORDER_PERSISTED",
+                "value": null,
+                "operationId": "checkout-1",
+                "minimum": 1
+            },
+            "fault": null,
+            "invariant": null,
+            "preconditions": [],
+            "dependsOn": [
+                "submit"
+            ],
+            "timeoutMs": 5000,
+            "rationale": null
+        },
+        {
+            "id": "rotate",
+            "type": "ROTATE",
+            "schemaVersion": 1,
+            "packageName": "dev.droidprobe.sample",
+            "selector": null,
+            "text": null,
+            "orientation": "LANDSCAPE",
+            "condition": null,
+            "fault": null,
+            "invariant": null,
+            "preconditions": [
+                {
+                    "type": "ORDER_PERSISTED",
+                    "value": null,
+                    "operationId": "checkout-1",
+                    "minimum": 1
+                }
+            ],
+            "dependsOn": [
+                "persisted"
+            ],
+            "timeoutMs": 15000,
+            "rationale": null
+        }
+    ],
+    "assertion": {
+        "invariantId": "checkout.at-most-one-order",
+        "operationId": "checkout-1"
+    },
+    "source": "scripted reproduction fixture"
+}

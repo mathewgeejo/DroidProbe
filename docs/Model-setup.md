@@ -1,6 +1,6 @@
 # Local model setup and physical-device validation
 
-The adapter is implemented against **LiteRT-LM Android 0.10.2**, pinned in `model-runtime`. Its Maven POM uses Kotlin 2.2.21 metadata and includes ARM64 and x86_64 JNI libraries; the project's Kotlin 2.2 toolchain can consume that metadata. The current 0.17.1 artifact requires Kotlin 2.4.0, so this MVP deliberately selects the earlier compatible release. Check the pinned source when changing runtime versions:
+The adapter is implemented against **LiteRT-LM Android 0.10.2**, pinned in `model-runtime`. Its Maven POM uses Kotlin 2.2.21 metadata and includes ARM64 and x86_64 JNI libraries; the project's Kotlin 2.2 toolchain can consume that metadata. The 0.17.1 artifact checked during implementation requires Kotlin 2.4.0, so this MVP deliberately selects the earlier compatible release. Check the pinned source when changing runtime versions:
 
 - [Official Android setup](https://developers.google.com/edge/litert-lm/android)
 - [0.10.2 Engine configuration](https://github.com/google-ai-edge/LiteRT-LM/blob/v0.10.2/kotlin/java/com/google/ai/edge/litertlm/Config.kt)

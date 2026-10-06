@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.droidprobe.core.CoreTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-10-06T04:28:00.568Z" hostname="MATHEW" time="0.258">
+  <properties/>
+  <testcase name="correctedBackendIsIdempotentEvenIfTheSameRequestIsRetried" classname="dev.droidprobe.core.CoreTest" time="0.042"/>
+  <testcase name="failureGroupingSeparatesBusinessPredicates" classname="dev.droidprobe.core.CoreTest" time="0.002"/>
+  <testcase name="correctedRotationRetainsOperationAndUniqueRecord" classname="dev.droidprobe.core.CoreTest" time="0.001"/>
+  <testcase name="identicalUiRetainsPersistedPendingBusinessDistinction" classname="dev.droidprobe.core.CoreTest" time="0.026"/>
+  <testcase name="scenarioRoundTripPreservesFaultsDependenciesAndAssertions" classname="dev.droidprobe.core.CoreTest" time="0.061"/>
+  <testcase name="acknowledgedDraftPredicateIsTheSameForBothModes" classname="dev.droidprobe.core.CoreTest" time="0.001"/>
+  <testcase name="fixtureResetRemovesCrossRunContamination" classname="dev.droidprobe.core.CoreTest" time="0.001"/>
+  <testcase name="faultyRotationIsAnExecutableBusinessFailure" classname="dev.droidprobe.core.CoreTest" time="0.0"/>
+  <testcase name="schemaRejectsShellAndUnknownFields" classname="dev.droidprobe.core.CoreTest" time="0.014"/>
+  <testcase name="minimizationRespectsEventDependenciesAndIntermittentThreshold" classname="dev.droidprobe.core.CoreTest" time="0.055"/>
+  <testcase name="minimizationRejectsInvalidAndDifferentFailures" classname="dev.droidprobe.core.CoreTest" time="0.005"/>
+  <testcase name="replayDoesNotTreatInvalidOrTimeoutAsFixed" classname="dev.droidprobe.core.CoreTest" time="0.01"/>
+  <testcase name="acceptedModelProposalStillComesFromValidatedVocabulary" classname="dev.droidprobe.core.CoreTest" time="0.02"/>
+  <testcase name="controlledErrorNeverConfirmsSuccess" classname="dev.droidprobe.core.CoreTest" time="0.0"/>
+  <testcase name="validatorRejectsForeignAbsentDisabledSelectorsAndUnsupportedVersion" classname="dev.droidprobe.core.CoreTest" time="0.001"/>
+  <testcase name="validatorRequiresTypedBoundsAndApplicablePreconditions" classname="dev.droidprobe.core.CoreTest" time="0.002"/>
+  <testcase name="plannerMissingOrMalformedModelProgressesWithAccurateLabel" classname="dev.droidprobe.core.CoreTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,30 @@
+﻿{
+    "capturedAtUtc":  "2026-10-06T05:19:04.1592942Z",
+    "apkScope":  "Final WorkflowTest, exported regression pair and seeded evaluation. DemoTest ran before importing the generated Kotlin class; its prior test APK hash was not captured.",
+    "apks":  [
+                 {
+                     "package":  "dev.droidprobe.sample",
+                     "artifact":  "sample-app/build/outputs/apk/debug/sample-app-debug.apk",
+                     "sha256":  "bbd6fdb5dddb14ee895229cbcbb144e649ec8774717ea625c4ab668e2dfbb8dd",
+                     "installedHashMatches":  true
+                 },
+                 {
+                     "package":  "dev.droidprobe.runner",
+                     "artifact":  "runner/build/outputs/apk/debug/runner-debug.apk",
+                     "sha256":  "3c4ee3c067eda10e621b6c50725d8e15c31762af871c31895407a1dc4a49b25a",
+                     "installedHashMatches":  true
+                 },
+                 {
+                     "package":  "dev.droidprobe.runner.test",
+                     "artifact":  "runner/build/outputs/apk/androidTest/debug/runner-debug-androidTest.apk",
+                     "sha256":  "6f6e045ba00a67e7fb34da9893201ebe3ea9a3d1ab429c97c303f3c00b18a8db",
+                     "installedHashMatches":  true
+                 }
+             ],
+    "demoRunId":  "demo-1791262455827",
+    "regressionBundle":  {
+                             "workspacePath":  ".local/device-results/demo-1791262455827/regression.zip",
+                             "bytes":  5202914,
+                             "sha256":  "0d5249fe44401912d4ea4de556533e439cde3086922f060101146a17dd761e6b"
+                         }
+}

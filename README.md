@@ -6,6 +6,8 @@ The sample and runner are separate Android packages. Automation runs through **A
 
 See [validation and implementation status](docs/Validation.md) for what was exercised and what remains blocked. On-device LiteRT-LM inference is implemented; physical-device/model validation remains required before calling the AI-guided MVP complete.
 
+The verified emulator workflow passed 20 JVM tests and three native workflow tests. Graph exploration discovered the checkout defect in 7 actions, and a separate longer reproduction reduced from 11 to 9 actions. The compiled exported regression passed in corrected mode and failed on the intended business assertion in faulty mode. [Captured evidence](docs/evidence/README.md) includes the raw reports, JUnit output and APK hashes.
+
 ## Build and install
 
 Requires JDK 17 or newer compatible with Gradle 9.4.0, Android SDK platform 35, Build Tools 36.0.0, platform-tools and a supported emulator or USB-debugging device. This workspace uses JDK 25.0.1. Set `ANDROID_HOME` or put your SDK location in an untracked `local.properties`.
@@ -49,6 +51,8 @@ adb shell am instrument -w -e class dev.droidprobe.runner.DroidProbeExportedRegr
 ```
 
 The exported Kotlin depends on **DroidProbe replay harness 0.1.0**. The corrected invocation should pass the business assertion; the faulty invocation should fail it. Replay does not ask the planner again. `scenario.json` includes versioned ActionIR, initial fixtures/orientation/mode, fault settings, dependencies/preconditions and the assertion. The ZIP also includes Kotlin, README, JSON evidence and captured PNGs. Timeouts, invalid preconditions and infrastructure errors never become “bug fixed.”
+
+The verified nine-action scenario and its generated Kotlin class are retained in `runner/src/exportedTest`. AGP's built-in Kotlin source set includes this directory in the instrumentation APK; importing a new bundle replaces those two artifacts.
 
 ## Evaluation and documentation
 

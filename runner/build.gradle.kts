@@ -9,7 +9,7 @@ android {
     }
     buildFeatures { compose = true }
     sourceSets.getByName("androidTest") {
-        java.srcDir("src/exportedTest/kotlin")
+        kotlin.directories += "src/exportedTest/kotlin"
         assets.srcDir("src/exportedTest/assets")
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
